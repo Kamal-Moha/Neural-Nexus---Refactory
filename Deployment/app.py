@@ -1,7 +1,6 @@
 import streamlit as st
 from PIL import Image
-# import cv2
-import opencv-python-headless as cv2
+import cv2
 import supervision as sv
 from time import sleep
 from ultralytics import YOLO
