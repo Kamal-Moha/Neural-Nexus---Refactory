@@ -26,6 +26,8 @@ task_type = st.sidebar.selectbox(
 )
 st.markdown('''**:blue-background[Step 2]**''')
 
+model = YOLO('Deployment/best.pt')
+
 if task_type == 'Image':
   st.markdown('Simply upload a picture of a sea turtle, we will detect the face of the turtle by drawing bbox')
   # Upload file
@@ -36,7 +38,6 @@ if task_type == 'Image':
     # To read file as bytes:
     file_img = st.image(img_uploaded)
     if st.button('Detect Turtle Face'):
-      model = YOLO('/content/best.pt')
       with st.spinner('Wait for it...'):
           sleep(5)
       result = model(image)[0]
