@@ -2,5 +2,5 @@ streamlit
 pillow
 supervision
 ultralytics
-opencv
+opencv-python-headless
 numpy
