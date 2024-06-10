@@ -2,6 +2,5 @@ streamlit
 pillow
 supervision
 ultralytics
-io
 cv2
 numpy
