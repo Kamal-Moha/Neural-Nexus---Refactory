@@ -7,6 +7,32 @@ from ultralytics import YOLO
 import io
 import numpy as np
 
+# Process frame function
+def process_frame(frame: np.ndarray, _) -> np.ndarray:
+    vid_results = model(frame, imgsz=1040)[0]
+
+    scores = vid_results.boxes.conf.cpu().numpy()
+    if len(scores) > 0:
+      detections = sv.Detections.from_ultralytics(vid_results)[int(np.argmax(scores))]
+      box_annotator = sv.BoundingBoxAnnotator()
+      label_annotator = sv.LabelAnnotator()
+      labels = [f"{name['class_name']} {confidence:0.2f}" for _, _, confidence, class_id, _,name in detections]
+
+      # creating the bounding boxes
+      annotated_frame = box_annotator.annotate(
+        scene=frame,
+        detections=detections
+      )
+      # labeling the bounding box
+      frame = label_annotator.annotate(
+        scene=annotated_frame,
+        detections=detections, labels=labels
+      )
+    else:
+      pass
+
+    return frame
+
 st.set_page_config(page_title= 'Sea Turtle Face Detector')
 
 hide_streamlit_style = """
@@ -27,6 +53,8 @@ task_type = st.sidebar.selectbox(
 )
 
 st.markdown('''**:blue-background[Step 2]**''')
+
+# load model
 model = YOLO('Deployment/best.pt')
 if task_type == 'Image':
   st.markdown('Simply upload a picture of a sea turtle, we will detect the face of the turtle by drawing bbox')
@@ -85,21 +113,33 @@ else:
   # Upload file
   uploaded_file = st.file_uploader('Upload Video', type=['mp4'])
 
-  if uploaded_file is not None:
+  if uploaded_video != None:
+    ts = datetime.timestamp(datetime.now())
+    imgpath = os.path.join('data/', str(ts)+uploaded_video.name)
+    outputpath = os.path.join('data/', os.path.basename(imgpath))
+    # imgpath = os.path.join(str(ts)+uploaded_video.name)
+    # outputpath = os.path.join(os.path.basename(imgpath))
 
-    # image = Image.open(uploaded_file)
+    with open(imgpath, mode='wb') as f:
+        f.write(uploaded_video.read())  # save video to disk
 
-    st.title('Original Image')
+    st_video = open(imgpath, 'rb')
+    video_bytes = st_video.read()
+    print('-----------')
+    print(imgpath)
+    st.video(video_bytes)
+    st.write("Uploaded Video")
+    if st.button('Detect Turtle Face in Video'):
 
-    # To read file as bytes:
-    # file_img = st.image(uploaded_file)
+      sv.process_video(source_path=imgpath, target_path=f"data/result.mp4", callback=process_frame)
 
-    # g = io.BytesIO(uploaded_file.read())  ## BytesIO Object
-    temporary_location = "testout_simple.mp4"
+      # Define the command
+      command = "ffmpeg -i data/result.mp4 -vcodec libx264 data/final_res.mp4"
 
-    with open(temporary_location, 'wb') as out:  ## Open temporary file as bytes
-        out.write(g.read())  ## Read bytes into file
+      # Run the command
+      subprocess.run(command, shell=True)
 
-    st.video('testout_simple.mp4')
-    print('-------------')
-
+      vid_file = open('data/final_res.mp4', 'rb')
+      vid_bytes = vid_file.read()
+      st.header('Detected Video')
+      st.video(vid_bytes)
