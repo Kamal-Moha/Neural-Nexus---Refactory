@@ -5,6 +5,7 @@ import supervision as sv
 from time import sleep
 from ultralytics import YOLO
 import io
+import subprocess
 import numpy as np
 
 # Process frame function
@@ -104,14 +105,12 @@ if task_type == 'Image':
         st.image(label_annotated_frame)
       else:
         st.write('Image is Not Clear. Please upload an Image that is of good resolution! Your Image should cover the entire shape of the turtle.')
-        
-
 
 else:
   st.markdown('Upload your video, we will process it, and detect sea turtle face. Takes Longer!')
 
   # Upload file
-  uploaded_file = st.file_uploader('Upload Video', type=['mp4'])
+  uploaded_video = st.file_uploader('Upload Video', type=['mp4'])
 
   if uploaded_video != None:
     ts = datetime.timestamp(datetime.now())
