@@ -5,7 +5,7 @@ import supervision as sv
 from time import sleep
 from datetime import datetime
 from ultralytics import YOLO
-import io
+import io, os
 import subprocess
 import numpy as np
 
