@@ -4,3 +4,4 @@ supervision
 ultralytics
 opencv-python-headless
 numpy
+subprocess
