@@ -115,10 +115,10 @@ else:
 
   if uploaded_video != None:
     ts = datetime.timestamp(datetime.now())
-    imgpath = os.path.join('data/', str(ts)+uploaded_video.name)
-    outputpath = os.path.join('data/', os.path.basename(imgpath))
-    # imgpath = os.path.join(str(ts)+uploaded_video.name)
-    # outputpath = os.path.join(os.path.basename(imgpath))
+    # imgpath = os.path.join('data/', str(ts)+uploaded_video.name)
+    # outputpath = os.path.join('data/', os.path.basename(imgpath))
+    imgpath = os.path.join(str(ts)+uploaded_video.name)
+    outputpath = os.path.join(os.path.basename(imgpath))
 
     with open(imgpath, mode='wb') as f:
         f.write(uploaded_video.read())  # save video to disk
@@ -132,15 +132,15 @@ else:
     st.write("Uploaded Video")
     if st.button('Detect Turtle Face in Video'):
 
-      sv.process_video(source_path=imgpath, target_path=f"data/result.mp4", callback=process_frame)
+      sv.process_video(source_path=imgpath, target_path=f"result.mp4", callback=process_frame)
 
       # Define the command
-      command = "ffmpeg -i data/result.mp4 -vcodec libx264 data/final_res.mp4"
+      command = "ffmpeg -i result.mp4 -vcodec libx264 final_res.mp4"
 
       # Run the command
       subprocess.run(command, shell=True)
 
-      vid_file = open('data/final_res.mp4', 'rb')
+      vid_file = open('final_res.mp4', 'rb')
       vid_bytes = vid_file.read()
       st.header('Detected Video')
       st.video(vid_bytes)
