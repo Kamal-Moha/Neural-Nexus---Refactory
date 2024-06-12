@@ -127,6 +127,7 @@ else:
     video_bytes = st_video.read()
     print('-----------')
     print(imgpath)
+    print(outputpath)
     st.video(video_bytes)
     st.write("Uploaded Video")
     if st.button('Detect Turtle Face in Video'):
