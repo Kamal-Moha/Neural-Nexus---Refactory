@@ -105,7 +105,7 @@ if task_type == 'Image':
         st.title('Detected Image')
         st.image(label_annotated_frame)
       else:
-        st.write('You have either not uploaded a turtle Image or the turtle Image is Not Clear. Please upload a clear turtle Image that is of good resolution! Your Image should cover the entire shape of the turtle.')
+        st.header('You have either not uploaded a turtle Image or the turtle Image is Not Clear. Please upload a clear turtle Image that is of good resolution! Your Image should cover the entire shape of the turtle.')
 
 else:
   st.markdown('Upload your video, we will process it, and detect sea turtle face. Takes Longer!')
